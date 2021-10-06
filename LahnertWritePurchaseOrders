@@ -1,0 +1,89 @@
+//AUTHOR: Austin Lahnert
+//Class: CPT187
+//Create Date: 9/30/21
+//Purpose: This program is designed to print the chosen items by
+//the user and how much of each they selected as well as the price,
+//and sentence as well as order total to a separate file. This file will keep track 
+//of completed order total and all of the above items to show the user at the end
+//of their sale in a final report
+
+package edu.cpt187.lahnert.project6;
+
+//importing classes to append files
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class WritePurchaseOrders 
+{
+	//implementing class constants
+	private boolean fileFoundFlag = false;
+	private String masterFileName = "";
+	private int recordCount = 0;
+
+	//constructor to pass file name
+	public WritePurchaseOrders(String borrowedFileName)
+	{
+		//assigning file name
+		masterFileName = borrowedFileName;
+	}
+
+	//setter section
+
+	public void setWriteOneRecord(String borrowedSubject, String borrowedVerb,
+			String borrowedPreposition, String borrowedObject, int borrowedLength,
+			int borrowedQuantity, double borrowedTotal)
+	{
+		//using try and catch to write the order in the file
+
+		try
+		{
+
+			//instantiation statement to attempt to open the file
+			PrintWriter filePW = new PrintWriter(new FileWriter(masterFileName, true));
+
+			//print f statement writes borrowed values to the file
+			filePW.printf("%n%s\t%s\t%s\t%s\t%d\t%d\t%.2f", borrowedSubject, borrowedVerb, borrowedPreposition,
+					borrowedObject, borrowedLength, borrowedQuantity, borrowedTotal);
+			//assigning file found to true
+			fileFoundFlag = true;
+			recordCount++;
+
+			//closing the file writer
+			filePW.close();
+		}//end of try
+
+		catch(IOException ex)
+		{
+			//assigning found flag to false
+			fileFoundFlag = false ;
+
+		}//end of catch
+
+	}//end of setter for write order
+
+	//getter section
+
+	//getter for file found flag
+	public boolean getFileFoundFlag()
+	{
+		//returning file found flag
+		return fileFoundFlag;
+	}//end of getter for file found flag
+
+	//getter for file name
+	public String getFileName()
+	{
+		//returning file name
+		return masterFileName;
+	}//end of getter for file name
+
+	//getter for record count
+	public int getRecordCount()
+	{
+		//returning record count
+		return recordCount;
+	}//end of getter for record count
+
+
+}//end of write purchase orders class
