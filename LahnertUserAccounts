@@ -1,0 +1,204 @@
+//AUTHOR: Austin Lahnert
+//Class: CPT187
+//Create Date: 9/30/21
+//Purpose: This program is designed to gather information from
+//the user. The user will create a new account or login with 
+//already created accounts. It will make sure that the
+//login information is correct and found.
+
+package edu.cpt187.lahnert.exercise6;
+
+//importing classes to use for file writing and reading
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class UserAccounts
+{
+
+	//declaring all class attributes
+	private final int NOT_FOUND = -1;
+	private final int RESET_VALUE = 0;
+	private final int MAXIMUM_RECORDS = 50;
+
+	private String[] userNames = new String[MAXIMUM_RECORDS];
+	private String[] passwords = new String[MAXIMUM_RECORDS];
+	private String masterFileName = "";
+	private int recordCount = 0;
+	private int searchedIndex = 0;
+
+
+	//constructor 
+	public UserAccounts(String borrowedFileName)
+	{
+		//assigning file name
+		masterFileName = borrowedFileName;
+
+	}//end of constructor
+
+
+	//setter section
+
+	//setter for user account
+	public void setUserAccountArrays()
+	{
+
+
+		//try block to assign items
+		try
+		{
+			//assigning record count to reset value to make it zero again
+			recordCount = RESET_VALUE;
+
+			//creating a instance for the scanner
+			Scanner infile = new Scanner(new FileInputStream(masterFileName));
+
+			//while statement to assign each record in the file
+			while(infile.hasNext() == true && recordCount < MAXIMUM_RECORDS)
+			{
+
+				//reading one record at a time and assigning to proper arrays
+				userNames[recordCount] = infile.next();//assigns next string to user names
+				passwords[recordCount] = infile.next();//assigns next string to passwords
+				recordCount++;//incrementing record count
+
+			}//end of while
+
+			//closing the file scanner
+			infile.close();
+		}//end of try block
+
+		catch(IOException ex)
+		{
+
+			//if file is not found or opened will throw catch exception and set to not found
+			recordCount = NOT_FOUND;
+		}//end of catch block
+	}//end of setter for user account arrays
+
+	//setter for searched index
+	public void setSearchedIndex(String borrowedUserName)
+	{
+		//assigning search results
+		searchedIndex = getSeqSearch(borrowedUserName);
+
+	}//end of setter for searched index
+
+	//setter for searched index
+	public void setSearchedIndex(String borrowedUserName, String borrowedPassword)
+	{
+		//assigning search results
+		searchedIndex = getSeqSearch(borrowedUserName);
+
+		//determining if password matches
+		if(searchedIndex >= RESET_VALUE && getPasswordMatch(borrowedPassword) == false)
+		{
+			//assigning not found to searched index
+			searchedIndex = NOT_FOUND;
+		}//end of if
+
+	}//end of setter for searched index
+
+	//setter for write one record
+	public void setWriteOneRecord(String borrowedUserName, String borrowedPassword)
+
+	{
+		//using try and catch to write the order in the file
+
+		try
+		{
+
+			//instantiation statement to attempt to open the file
+			PrintWriter filePW = new PrintWriter(new FileWriter(masterFileName, true));
+
+			//print f statement writes borrowed values to the file
+			filePW.printf("%n%s\t%s", borrowedUserName, borrowedPassword);
+
+			recordCount++;
+
+			//closing the file writer
+			filePW.close();
+		}//end of try
+
+		catch(IOException ex)
+		{
+
+
+		}//end of catch
+
+	}//end of setter for write order
+
+
+	//getter section
+
+	//getter for search results
+	public int getSeqSearch(String borrowedBorrowedUserName)
+	{
+		//creating local index to use for searching
+		//creating local found to use when what we are searching for is found
+		int localIndex = RESET_VALUE;
+		int localFound = NOT_FOUND;
+
+		//while statement to search through array
+		while(localIndex < recordCount)
+		{
+			//if to determine if we found what we are searching for
+			if(userNames[localIndex].equalsIgnoreCase(borrowedBorrowedUserName) == true)
+			{
+				//if found setting local found to id found
+				//and setting local index to record count to end loop
+				localFound = localIndex;
+				localIndex = recordCount;
+			}//end of if
+
+			else
+			{
+				//incrementing local index 
+				localIndex ++;
+			}//end of else
+
+		}//end of while
+
+		//returning found id
+		return localFound;
+	}//end of getter for search results
+
+	//getter for password match
+	public boolean getPasswordMatch(String borrowedBorrowedPassword)
+	{
+		
+		return passwords[searchedIndex].equals(borrowedBorrowedPassword);
+
+	}//end of get password match
+
+	//getter for file name
+	public String getFileName()
+	{
+		//returning file name
+		return masterFileName;
+	}//end of getter for file name
+
+	//getter for maximum records
+	public int getMaximumRecords()
+	{
+		//returning maximum records
+		return MAXIMUM_RECORDS;
+	}//end of getter for maximum records
+
+	//getter for record count 
+	public int getRecordCount()
+	{
+		//returning record count
+		return recordCount;
+	}//end of getter for record count
+
+	//getter for searched index
+	public int getSearchedIndex()
+	{
+		//returning search index
+		return searchedIndex;
+	}//end of getter for searched index
+
+}//end of user accounts class
